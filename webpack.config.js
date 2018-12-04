@@ -1,16 +1,95 @@
+const path = require('path');
+
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+
 module.exports = {
-	entry: './src/app.js',
+	target: 'web',
+	context: path.resolve(__dirname, 'src'),
+
+	entry: {
+		app: './app.js'
+	},
+
 	output: {
-		path: './dist',
-		filename:'app.bundle.js'
+		path: path.resolve(__dirname, 'dist'),
+		filename: '[name].js',
+		chunkFilename: '[name].[chunkhash].js'
+	},
+
+	resolve: {
+		extensions: ['.ts', '.js', '.html', '.css'],
+		modules: ['node_modules'],
 	},
 	module: {
-		loaders: [{
-			exclude: '/node_modules/',
-			loader: 'babel-loader',
-			query: {
-				presets: ['es2015']
+		rules: [
+			{
+				test: /\.html$|\.json$|\.md$/,
+				loader: 'raw-loader'
+			},
+			{
+				test: /\.css$/,
+				use: [ 'style-loader', 'css-loader' ]
+			},
+			{
+				test: /\.ts?$/,
+				use: [
+					{
+						loader: 'awesome-typescript-loader',
+						options: {
+							configFileName: path.resolve(__dirname, 'src', 'tsconfig.json')
+						}
+					}
+				]
+			},
+			{
+				test: /\.(woff|woff2|eot|ttf|otf|svg|png)$/,
+				use: [
+					'file-loader'
+				]
+			},
+			{
+				test: /\.less$/,
+				use: [
+					// creates style nodes from JS strings
+					'style-loader',
+					// translates CSS into CommonJS
+					'css-loader',
+					// compiles Less to CSS
+					{
+						loader: "less-loader",
+						options: {
+							relativeUrls: false
+						}
+					}
+				]
 			}
-		}]
+		]
+	},
+
+	plugins: [
+		new HtmlWebpackPlugin({
+			template: 'index.html'
+		}),
+		new CommonsChunkPlugin({
+			name: 'vendor',
+			minChunks: Infinity
+		}),
+		new CircularDependencyPlugin({
+			exclude: /node_modules/g
+		})
+	],
+
+	devtool: 'inline-source-map',
+
+	devServer: {
+		port: 8000,
+		historyApiFallback: true,
+		headers: {
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+			'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization'
+		}
 	}
-}
+};

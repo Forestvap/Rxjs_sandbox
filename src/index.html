@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>RxJS Boiler</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+</head>
+<body>
+	<!--<p>For more info, visit <a target="_blank" href="https://github.com/bradtraversy/rxjs_boiler">https://github.com/bradtraversy/rxjs_boiler</a></p>-->
+	<div class="ui main container">
+		<h1 class="ui header">RxJS Boiler</h1>
+		<!--interval map-->
+		<div class="ui segment">
+			<h4 class="ui header">interval Map</h4>
+			<div class="ui one column grid">
+        <pre id="interval">
+          <code class="ui ignored code"></code>
+        </pre>
+			</div>
+		</div>
+		<!--keyup event-->
+		<div class="ui segment">
+			<h4 class="ui header">keyup</h4>
+			<div class="ui one column grid">
+				<div class="ui input column">
+					<input id="inputText" placeholder="Enter"></input>
+				</div>
+				<div class="column">
+					<pre id="inputTextOutput">
+            <code class="ui ignored code"></code>
+          </pre>
+				</div>
+			</div>
+		</div>
+		<!--click event-->
+    <div class="ui segment">
+			<h4 class="ui header">fromEvent Click Event</h4>
+			<div class="ui one column grid">
+				<div class="column">
+					<button class="ui primary button" id="btn" data-attr="IAMGROOT">Click</button>
+				</div>
+				<div class="column">
+          <pre id="output">
+              <code class="ui ignored code"></code>
+          </pre>
+				</div>
+			<!--<div id="posts"></div>-->
+		</div>
+	</div>
+		<!--mouse move event-->
+		<div class="ui segment">
+			<h4 class="ui header">mouse move</h4>
+			<div class="ui one column grid">
+				<div class="column">
+					<pre id="mouseMove">
+            <code class="ui ignored code"></code>
+          </pre>
+				</div>
+			</div>
+		</div>
+		<!--number from-->
+		<div class="ui segment">
+			<h4 class="ui header">numbers [33, 44, 55, 66, 77] </h4>
+			<div class="ui one column grid">
+				<div class="column">
+					<pre id="numberOutput">
+            <code class="ui ignored code"></code>
+          </pre>
+				</div>
+			</div>
+		</div>
+		<!--post-->
+		<div class="ui segment">
+			<h4 class="ui code ignored less">
+				numbers [
+				{title: 'POST ONE', body: 'This is the body'},
+				{title: 'POST TWO', body: 'This is the body'},
+				{title: 'POST THREE', body: 'This is the body'}
+				];
+			</h4>
+			<div class="ui one column grid">
+				<div class="column">
+					<pre id="posts">
+            <code class="ui ignored code"></code>
+          </pre>
+				</div>
+			</div>
+		</div>
+		<!--set-->
+		<div class="ui segment">
+			<h4 class="ui code ignored less">
+				set ['Hello', 44, {title: 'My Title'}]
+			</h4>
+			<div class="ui one column grid">
+				<div class="column">
+					<pre id="set">
+            <code class="ui ignored code"></code>
+          </pre>
+				</div>
+			</div>
+		</div>
+		<!--set-->
+		<div class="ui segment">
+			<h4 class="ui code ignored less">
+				map [[1,2],[2,3],[3,4]]
+			</h4>
+			<div class="ui one column grid">
+				<div class="column">
+					<pre id="maps">
+            <code class="ui ignored code"></code>
+          </pre>
+				</div>
+			</div>
+		</div>
+		<!--source-->
+		<div class="ui segment">
+			<h4 class="ui code ignored less">
+        Create Observable
+			</h4>
+			<div class="ui one column grid">
+				<div class="column">
+					<pre id="source">
+            <code class="ui ignored code"></code>
+          </pre>
+				</div>
+			</div>
+		</div>
+		<!--input source fromPromise-->
+		<div class="ui segment">
+			<h4 class="ui code ignored less">
+				Input source Observable fromPromise
+			</h4>
+			<div class="ui one column grid">
+				<div class="ui input column">
+					<input id="inputSource" placeholder="Enter"></input>
+				</div>
+				<div class="column">
+					<h4 id="name"></h4>
+					<ul>
+						<li id="blog"></li>
+						<li id="repos"></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--count-->
+		<div class="ui segment">
+			<h4 class="ui code ignored less">
+        count interval
+			</h4>
+			<div class="ui one column grid">
+				<div class="column">
+					<pre>
+            <code id="count1" class="ui ignored code"></code>
+            <code id="count2" class="ui ignored code"></code>
+            <code id="count3" class="ui ignored code"></code>
+          </pre>
+				</div>
+			</div>
+		</div>
+		<!--map-->
+		<div class="ui segment">
+			<h4 class="ui code ignored less">
+        .map
+			</h4>
+			<div class="ui one column grid">
+				<div class="column">
+					<pre>
+            <code id="arr" class="ui ignored code"></code>
+            <code id="map" class="ui ignored code"></code>
+          </pre>
+				</div>
+			</div>
+		</div>
+	<script src="../dist/app.bundle.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+</body>
+</html>

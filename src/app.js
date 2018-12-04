@@ -1,11 +1,15 @@
 import $ from 'jquery';
 import Rx from 'rxjs/Rx';
+import { writeToSelector, replaceContentAtSelector } from './helpers';
 
-// const btn = $('#btn');
 const input = $('#input');
 // const output = $('#output');
 
-// const btnStream$ = Rx.Observable.fromEvent(btn, 'click');
+/*
+ * click event: fromEvent
+ */
+const btn = $('#btn');
+const btnStream$ = Rx.Observable.fromEvent(btn, 'click');
 
 // btnStream$.subscribe(
 //     function(e){
@@ -18,129 +22,158 @@ const input = $('#input');
 //         console.log('completed');
 //     }
 // );
+btnStream$.subscribe(event => {
+  console.log('event', event.target.dataset);
+  return writeToSelector('#output', event.target.dataset.attr)});
 
-// // const inputStream$ = Rx.Observable.fromEvent(input, 'keyup');
+/*
+ * input event: fromEvent
+ *
+ */
+const inputText = $('#inputText');
+const inputStream$ = Rx.Observable.fromEvent(inputText, 'keyup');
 
-// // inputStream$.subscribe(
-// //     function(e){
-// //         console.log(e.target.value);
-// //         output.append(e.target.value);
-// //     },
-// //     function(){
-// //         console.log('completed');
-// //     }
-// // );
+inputStream$.subscribe(
+    function(e){
+        console.log(e.target.value);
+				return writeToSelector('#inputTextOutput', `Output: ${e.target.value}`);
+    },
+    function(){
+        console.log('completed');
+    }
+);
 
-// const moveStream$ = Rx.Observable.fromEvent(document, 'mousemove');
+/*
+ * mouse move event: fromEvent
+ *
+ */
+const moveStream$ = Rx.Observable.fromEvent(document, 'mousemove');
 
-// moveStream$.subscribe(
-//     function(e){
-//         console.log(e.target.value);
-//         output.html('<h1>X: ' + e.clientX + 'Y：' + e.clientY + '</h1>');
-//     },
-//     function(){
-//         console.log('completed');
-//     }
-    
-// );
+moveStream$.subscribe(
+    function(e){
+        console.log(e.target.value);
+        return writeToSelector('#mouseMove', `<h1>X: ${e.clientX} Y：${e.clientY}</h1>`);
+    },
+    function(){
+        console.log('completed');
+    }
+);
 
-// const numbers = [33, 44, 55, 66, 77];
+const numbers = [33, 44, 55, 66, 77];
 
-// const numbers$ = Rx.Observable.from(numbers);
+const numbers$ = Rx.Observable.from(numbers);
 
-// numbers$.subscribe(
-//     v => {
-//     console.log(v);
-//     },
-//     error => {
-//         console.log(error);
-//     },
-//     complete => {
-//         console.log('Completed');
-//     }
-// );
+numbers$
+  .take(3)
+  .subscribe(
+    v => {
+			writeToSelector('#numberOutput', `<h4>${v}</h4>`)
+    },
+    error => {
+      console.log(error);
+    },
+    complete => {
+      console.log('Completed');
+    }
+);
 
-// const posts = [
-//     {title: 'POST ONE', body: 'This is the body'},
-//     {title: 'POST TWO', body: 'This is the body'},
-//     {title: 'POST THREE', body: 'This is the body'}
-// ];
+/**
+ * post
+ *
+ * @type {*[]}
+ */
+const posts = [
+    {title: 'POST ONE', body: 'This is the body one'},
+    {title: 'POST TWO', body: 'This is the body two'},
+    {title: 'POST THREE', body: 'This is the body three'}
+];
 
-// const postOutput = $('#posts');
-// const posts$ = Rx.Observable.from(posts);
+const postOutput = $('#posts');
+const posts$ = Rx.Observable.from(posts);
 
-// posts$.subscribe(
-//     post => {
-//         console.log(post);
-//         $('#posts').append('<li><h3>' +post.title + '<h3><p>' + post.body +'</p></li>');
-//     },
-//     error => {
-//         console.log(error);
-//     },
-//     complete => {
-//         console.log('Completed');
-//     }
-// )
+posts$.subscribe(
+    post => {
+        console.log(post);
+        $('#posts').append('<li><h3>' +post.title + '<h3><p>' + post.body +'</p></li>');
+    },
+    error => {
+        console.log(error);
+    },
+    complete => {
+        console.log('Completed');
+    }
+)
 
 // // Set
+const set = new Set(['Hello', 44, {title: 'My Title'}]);
 
-// const set = new Set(['Hello', 44, {title: 'My Title'}]);
+const set$ = Rx.Observable.from(set);
 
-// const set$ = Rx.Observable.from(set);
-
-// set$.subscribe(
-//     v => {
-//         console.log(v);
-//     },
-//     err => {
-//         console.log(err);
-//     },
-//     complete => {
-//         console.log('Completed');
-//     }
-// );
+set$.subscribe(
+    v => {
+    	console.log('set', v)
+			writeToSelector('#set', `${v.title}`)
+		},
+    err => {
+        console.log(err);
+    },
+    complete => {
+        console.log('Completed');
+    }
+);
 
 // // Map
 
-// const map = new Map([[1,2],[2,3],[3,4]]);
+const map = new Map([[1,2],[2,3],[3,4]]);
 
-// const map$ = Rx.Observable.from(map);
+const maps$ = Rx.Observable.from(map);
 
-// map$.subscribe(
-//     v => {
-//         console.log(v);
-//     },
-//     err => {
-//         console.log(err);
-//     },
-//     complete => {
-//         console.log('Completed');
-//     }
-// )
+maps$.subscribe(
+    v => {
+        console.log(v);
+			writeToSelector('#maps', `[${v[0]}, ${v[1]}]`)
+    },
+    err => {
+        console.log(err);
+    },
+    complete => {
+        console.log('Completed');
+    }
+)
 
-// // Source Observer
+// Source Observer
 
-// const source$ = new Rx.Observable(
-//     observer => {
-//         console.log('Creating Observable');
+const source$ = new Rx.Observable(
+    observer => {
+      console.log('Creating Observable');
+			replaceContentAtSelector('#source', `<p>Creating Observable</p>`);
+      setTimeout(()=>{
+        observer.next(
+          replaceContentAtSelector('#source', `<p>Hello World</p>`)
+        );
+      }, 1000);
 
-//         observer.next('Hello World');
-//         observer.next('Another World');
+			setTimeout(()=>{
+				observer.next(
+					replaceContentAtSelector('#source', `<p>Another World</p>`)
+				);
+			}, 1000);
 
-//         observer.error(new Error('Error: something went wrong'));
-//         setTimeout(()=>{
-//             observer.next('Another wWorld');
-//             observer.complete();
-//         }, 3000);
-        
-//     }
-// );
+      observer.error(new Error('Error: something went wrong'));
+      setTimeout(()=>{
+				observer.next(
+					replaceContentAtSelector('#source', `<p>Another World Two</p>`)
+				);
+          observer.complete();
+      }, 3000);
+    }
+);
 
 // source$
 // .catch(err => Rx.Observable.of(err))
 // .subscribe(
 //     x => {
-//         console.log(x);
+//         console.log('errr', x);
 //     },
 //     err => {
 //         console.log(err);
@@ -150,87 +183,89 @@ const input = $('#input');
 //     }
 // );
 
-// // Promise
+// Promise
 
-// const myPromise = new Promise(
-//     (resolve, reject) => {
-//         console.log('Creating promise');
-//         setTimeout(()=>{
-//             resolve('Hello From promise');
-//         }, 3000);
-//     }
-// );
+const myPromise = new Promise(
+    (resolve, reject) => {
+        console.log('Creating promise');
+        setTimeout(() => {
+            resolve('Hello From promise');
+        }, 3000);
+    }
+);
 
-// // myPromise.then(
-// //     x => {
-// //         console.log(x);
-// //     } 
-// // );
+myPromise.then(
+    x => {
+        console.log(x);
+    }
+);
 
-// const promise$ = Rx.Observable.fromPromise(myPromise);
+const promise$ = Rx.Observable.fromPromise(myPromise);
 
-// promise$.subscribe(
-//     x => console.log(x)
-// );
+promise$.subscribe(
+    x => console.log('promise$', x)
+);
 
-// function getUser(username){
-//     return $.ajax({
-//         url: 'https://api.github.com/users/' + username,
-//         dataType: 'jsonp'
-//     }).promise();
-// }
+/**
+ * get users fromPromise
+ * @param username
+ * @returns {*}
+ */
+function getUser(username){
+    return $.ajax({
+        url: 'https://api.github.com/users/' + username,
+        dataType: 'jsonp'
+    }).promise();
+}
 
-// const inputSource$ = Rx.Observable.fromEvent($('#input'), 'keyup');
+const inputSource1$ = Rx.Observable.fromEvent($('#inputSource'), 'keyup');
 
-// inputSource$.subscribe(
-//     e => {
-//         console.log(e);
-//         Rx.Observable.fromPromise(getUser(e.target.value))
-//             .subscribe(
-//                 x=>{
-//                     $('#name').text(x.data.name);
-//                     $('#blog').text(x.data.blog);
-//                     $('#repos').text('Public repos: ' + x.data.public_repos);
-//                 },
-//                 err=>{
-//                     console.log(err);
-//                 }
-//             );
-//     },
-//     error => {
-//         console.log(error);
-//     }
-// )
+inputSource1$
+  .debounceTime(1000)
+  .subscribe(
+    e => {
+        console.log(e);
+        Rx.Observable.fromPromise(getUser(e.target.value))
+            .subscribe(
+                x=>{
+                    $('#name').text(x.data.name);
+                    $('#blog').text(x.data.blog);
+                    $('#repos').text('Public repos: ' + x.data.public_repos);
+                },
+                err=>{
+                    console.log(err);
+                }
+            );
+    },
+    error => {
+        console.log(error);
+    }
+);
 
-// // intervale
+/**
+ * interval count
+  */
+const count1$ = Rx.Observable.interval(100)
+    .take(6);
 
-// // const count$ = Rx.Observable.interval(100)
-// //     .take(6);
+const count2$ = Rx.Observable.timer(5000, 2000)
+    .take(6);
 
-// // const count$ = Rx.Observable.timer(5000, 2000)
-// //     .take(6);
+const count3$ = Rx.Observable.range(25,100);
 
-// const count$ = Rx.Observable.range(25,100);
+count1$.subscribe(val => writeToSelector('#count1', val));
+count2$.subscribe(val => writeToSelector('#count2', val));
+count3$.subscribe(val => writeToSelector('#count3', val));
 
-// count$.subscribe(
-//     x => {
-//         console.log(x);
-//     },
-//     err =>{
-//         console.log(err);
-//     },
-//     complete => {
-//         console.log('completed')
-//     }
-
-// )
-
-//Map
+/**
+ * Map
+ */
 const arr = [
     'John',
     'Tom',
     'Shawn'
-]
+];
+
 const map$ = Rx.Observable.interval(1000)
     .take(10)
     .map(v => v*2);
@@ -238,9 +273,12 @@ const arr$ = Rx.Observable.from(arr)
     .map(v=> v.toUpperCase())
     .map(v=> 'I am ' + v);
 
-arr$.subscribe(v =>console.log(v));
+arr$.subscribe(v => {
+  return writeToSelector('#arr', v)});
 
-map$.subscribe(v => console.log(v));
+map$.subscribe(value => {
+	return writeToSelector('#map', value)});
+
 
 // //Map
 // function getUser(username){
@@ -294,7 +332,7 @@ const source1$ = Rx.Observable.range(0,5).map(v => 'Merge1: ' + v);
 const source2$ = Rx.Observable.range(7,5).map(v => 'Merge2: ' + v);
 
 Rx.Observable.concat(source1$, source2$)
-    .subscribe(x =>console.log(x));
+    .subscribe(x =>console.log('concat', x));
 
 Rx.Observable.of('Hello')
     .subscribe(
@@ -311,13 +349,6 @@ Rx.Observable.of('Hello')
     })
     .subscribe(x => console.log(x));
 
-function getUser(username){
-    return $.ajax({
-        url: 'https://api.github.com/users/' + username,
-        dataType: 'jsonp'
-    }).promise();
-}
-
 const inputSource$ = Rx.Observable.fromEvent(input , 'keyup')
     .map(e => e.target.value)
     .switchMap(v =>{ 
@@ -326,8 +357,8 @@ const inputSource$ = Rx.Observable.fromEvent(input , 'keyup')
 
 inputSource$.subscribe(
     x=>{
-                    $('#name').text(x.data.name);
-                    $('#blog').text(x.data.blog);
-                    $('#repos').text('Public repos: ' + x.data.public_repos);
-                },
+        $('#name').text(x.data.name);
+        $('#blog').text(x.data.blog);
+        $('#repos').text('Public repos: ' + x.data.public_repos);
+    },
 )
