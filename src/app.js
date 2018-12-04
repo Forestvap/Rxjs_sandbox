@@ -88,7 +88,6 @@ const posts = [
     {title: 'POST THREE', body: 'This is the body three'}
 ];
 
-const postOutput = $('#posts');
 const posts$ = Rx.Observable.from(posts);
 
 posts$.subscribe(
@@ -222,20 +221,16 @@ const inputSource1$ = Rx.Observable.fromEvent($('#inputSource'), 'keyup');
 
 inputSource1$
   .debounceTime(1000)
+	.map(e => e.target.value)
+	.switchMap(v =>{
+		return Rx.Observable.fromPromise(getUser(v));
+	})
   .subscribe(
     e => {
-        console.log(e);
-        Rx.Observable.fromPromise(getUser(e.target.value))
-            .subscribe(
-                x=>{
-                    $('#name').text(x.data.name);
-                    $('#blog').text(x.data.blog);
-                    $('#repos').text('Public repos: ' + x.data.public_repos);
-                },
-                err=>{
-                    console.log(err);
-                }
-            );
+			console.log('github api data', e.data);
+			$('#name').text(e.data.name);
+			$('#blog').text(e.data.blog);
+			$('#repos').text('Public repos: ' + e.data.public_repos);
     },
     error => {
         console.log(error);
@@ -279,35 +274,16 @@ arr$.subscribe(v => {
 map$.subscribe(value => {
 	return writeToSelector('#map', value)});
 
+const users = [
+    {name: 'Will', age: 34, job: { title: 'Developer', language: 'JavaScript' }},
+    {name: 'Mike', age: 33},
+    {name: 'Paul', age: 35},
+];
 
-// //Map
-// function getUser(username){
-//     return $.ajax({
-//         url: 'https://api.github.com/users/' + username,
-//         dataType: 'jsonp'
-//     }).promise();
-// }
-// Rx.Observable.fromPromise(getUser('forestvap'))
-//             .map(user => user.data.name)
-//             .subscribe(
-//                 name=>{
-//                    console.log(name);
-//                 },
-//                 err=>{
-//                     console.log(err);
-//                 }
-//             );
+const users$ = Rx.Observable.from(users)
+    .pluck('job', 'title');
 
-// const users = [
-//     {name: 'Will', age: 34},
-//     {name: 'Mike', age: 33},
-//     {name: 'Paul', age: 35}
-// ];
-
-// const users$ = Rx.Observable.from(users)
-//     .pluck('name');
-
-// users$.subscribe(x => console.log(x));
+users$.subscribe(x => console.log('usersname', x));
 
 // //merge
 
@@ -349,16 +325,21 @@ Rx.Observable.of('Hello')
     })
     .subscribe(x => console.log(x));
 
-const inputSource$ = Rx.Observable.fromEvent(input , 'keyup')
-    .map(e => e.target.value)
-    .switchMap(v =>{ 
-        return Rx.Observable.fromPromise(getUser(v));
-    })
 
-inputSource$.subscribe(
-    x=>{
-        $('#name').text(x.data.name);
-        $('#blog').text(x.data.blog);
-        $('#repos').text('Public repos: ' + x.data.public_repos);
-    },
-)
+/**
+ *  scan
+ */
+const subject = new Rx.Subject();
+//scan example building an object over time
+const example = subject.scan((acc, curr) => Object.assign({}, acc, curr), {});
+//log accumulated values
+const subscribe = example.subscribe(val => {
+	return writeToSelector('#scan', `${val.name} ${val.age} ${val.favoriteLanguage}`)
+});
+//next values into subject, adding properties to object
+// {name: 'Joe'}
+subject.next({ name: 'Joe' });
+// {name: 'Joe', age: 30}
+subject.next({ age: 30 });
+// {name: 'Joe', age: 30, favoriteLanguage: 'JavaScript'}
+subject.next({ favoriteLanguage: 'JavaScript' });
