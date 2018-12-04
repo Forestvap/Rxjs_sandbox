@@ -3,7 +3,6 @@ import Rx from 'rxjs/Rx';
 import { writeToSelector, replaceContentAtSelector } from './helpers';
 
 const input = $('#input');
-// const output = $('#output');
 
 /*
  * click event: fromEvent
@@ -11,17 +10,6 @@ const input = $('#input');
 const btn = $('#btn');
 const btnStream$ = Rx.Observable.fromEvent(btn, 'click');
 
-// btnStream$.subscribe(
-//     function(e){
-//         console.log('clicked');
-//     },
-//     function(err){
-//         console.log('err');
-//     },
-//     function(){
-//         console.log('completed');
-//     }
-// );
 btnStream$.subscribe(event => {
   console.log('event', event.target.dataset);
   return writeToSelector('#output', event.target.dataset.attr)});
